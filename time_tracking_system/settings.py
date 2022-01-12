@@ -44,6 +44,8 @@ INSTALLED_APPS = [
     'corsheaders',
 
     # local apps
+    'users',
+
 ]
 
 MIDDLEWARE = [
@@ -106,6 +108,8 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# https://docs.djangoproject.com/en/dev/ref/settings/#auth-user-model
+AUTH_USER_MODEL = "users.User"
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
