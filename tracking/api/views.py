@@ -115,7 +115,7 @@ class ContractRetrieveUpdateDestroyAPIView(
     that belongs to them. Admins have access to all the contracts.
     """
 
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAdminOrOwner,)
     model = Contract
     read_serializer = ContractReadSerializer
     write_serializer = ContractWriteSerializer

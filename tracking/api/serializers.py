@@ -48,21 +48,35 @@ class ContractWriteSerializer(serializers.ModelSerializer):
             )
         ]
 
+    def check_user_permission(self, user):
+        """
+        Check if the user has the right permissions
+        """
+        request = self.context.get('request')
+        if not request.user.is_staff and (request.user.id != user.id):
+            raise serializers.ValidationError({'user': 'You do not have permission for this'})
+
     def create(self, validated_data):
         """
         Create a contract with the given user_id and project_id
         """
-
-        request = self.context.get('request')
-
-        if not request.user.is_staff and (request.user.id != validated_data['user'].id):
-            raise serializers.ValidationError({'user': 'You do not have permission for this'})
+        self.check_user_permission(validated_data['user'])
 
         return Contract.objects.create(
             project=validated_data['project'],
             user=validated_data['user'],
             hourly_price=validated_data['hourly_price']
         )
+
+    def update(self, instance, validated_data):
+        """
+        Check if the user has the necessary permissions for the update they are making.
+        """
+        if validated_data.get('user'):
+            # Make sure the user is not choosing some other user as the contract owner. Only admin
+            # is allowed to do that
+            self.check_user_permission(validated_data['user'])
+        return super().update(instance, validated_data)
 
 
 class TimelogWriteSerializer(serializers.ModelSerializer):

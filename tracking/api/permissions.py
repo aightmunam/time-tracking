@@ -11,7 +11,16 @@ class IsAdminOrOwner(permissions.BasePermission):
     """
 
     def has_permission(self, request, view):
-        return request.user.is_staff or (request.user.id == view.kwargs.get('user_id'))
+        if not request.user.is_authenticated:
+            return False
+
+        if request.user.is_staff:
+            return True
+
+        if view.kwargs.get('user_id'):
+            return request.user.id == view.kwargs.get('user_id')
+
+        return True
 
     def has_object_permission(self, request, view, obj):
         if request.user.is_authenticated:
