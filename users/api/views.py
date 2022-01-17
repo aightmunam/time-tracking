@@ -1,26 +1,36 @@
 """
 All the api views for the users app
 """
-from rest_framework import generics
-from rest_framework.permissions import AllowAny, IsAdminUser
+from rest_framework.generics import (ListCreateAPIView,
+                                     RetrieveUpdateDestroyAPIView)
+from rest_framework.permissions import (SAFE_METHODS, AllowAny, IsAdminUser,
+                                        IsAuthenticated)
 
 from users.models import User
 
-from .permissions import IsOwnerOrAdmin
 from .serializers import RegisterUserSerializer, UserSerializer
 
 
-class UserRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
+class UserRetrieveUpdateDestroyView(RetrieveUpdateDestroyAPIView):
     """
     APIView to retrieve and update users. Only an admin
-    or the user themselves can update their user object
+    or the user themselves can access their user object
     """
-    queryset = User.objects.all()
-    permission_classes = (IsOwnerOrAdmin,)
+    permission_classes = (IsAuthenticated,)
     serializer_class = UserSerializer
+    model = User
+
+    def get_queryset(self):
+        """
+        Filter users to only allow an admin or the user themselves access
+        """
+        if self.request.user.is_staff:
+            return User.objects.all()
+
+        return User.objects.filter(id=self.request.user.id)
 
 
-class ListRegisterView(generics.ListCreateAPIView):
+class ListRegisterView(ListCreateAPIView):
     """
     APIView to register a new user
     """
@@ -31,7 +41,7 @@ class ListRegisterView(generics.ListCreateAPIView):
         Add a RegisterSerializer for POST request and UserSerializer for all
         GET calls
         """
-        if self.request.method == 'GET':
+        if self.request.method in SAFE_METHODS:
             return UserSerializer
 
         return RegisterUserSerializer
@@ -41,7 +51,7 @@ class ListRegisterView(generics.ListCreateAPIView):
         Allow any one to register a new user but only allow an admin
         to list all the users
         """
-        if self.request.method == 'GET':
+        if self.request.method in SAFE_METHODS:
             return [IsAdminUser()]
 
         return [AllowAny()]

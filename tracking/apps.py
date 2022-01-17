@@ -1,13 +1,13 @@
 """
-App Config for users app
+App configuration for tracking app
 """
 from django.apps import AppConfig
 
 
-class UsersConfig(AppConfig):
+class TrackingConfig(AppConfig):
     """
-    Config for users
+    Config for tracking app
     """
 
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'users'
+    name = 'tracking'

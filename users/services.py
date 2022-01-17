@@ -29,6 +29,6 @@ def create_user(username, email, password, first_name='', last_name='', **kwargs
     user.set_password(password)
     user.save()
 
-    # Create an auth token a newly created user
+    # Create a JWT auth token a newly created user
     user.create_auth_token()
     return user

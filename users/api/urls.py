@@ -7,5 +7,5 @@ from .views import ListRegisterView, UserRetrieveUpdateDestroyView
 
 urlpatterns = [
     path('', ListRegisterView.as_view(), name='register'),
-    path('<pk>', UserRetrieveUpdateDestroyView.as_view(), name='detail'),
+    path('<int:pk>/', UserRetrieveUpdateDestroyView.as_view(), name='detail'),
 ]
