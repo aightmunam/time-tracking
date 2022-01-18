@@ -145,7 +145,7 @@ class TimelogListAPIView(ListAPIView):
     permission_classes = (IsAuthenticated,)
     serializer_class = TimelogReadSerializer
     queryset = Timelog.objects.all()
-    filterset_fields = ['contract']
+    filterset_fields = ['contract', 'date']
 
     def get_queryset(self):
         """
@@ -169,7 +169,7 @@ class UserTimelogListCreateAPIView(
     permission_classes = (IsAdminOrOwner,)
     read_serializer = TimelogReadSerializer
     write_serializer = TimelogWriteSerializer
-    filterset_fields = ['contract']
+    filterset_fields = ['contract', 'date']
 
     def get_serializer_data(self):
         """
