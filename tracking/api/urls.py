@@ -36,10 +36,5 @@ urlpatterns = [
         views.UserTimelogListCreateAPIView.as_view(),
         name='timelog_list_for_user'
     ),
-    path(
-        'contracts/<int:contract_id>/logs/',
-        views.ContractTimelogListAPIView.as_view(),
-        name='timelog_list_for_contract'
-    )
 
 ]

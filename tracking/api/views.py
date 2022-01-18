@@ -7,9 +7,7 @@ from rest_framework.permissions import (SAFE_METHODS, IsAdminUser,
                                         IsAuthenticated)
 
 from tracking.models import Contract, Project, Timelog
-from tracking.selectors import (get_contracts_for_user,
-                                get_timelogs_for_contract,
-                                get_timelogs_for_user)
+from tracking.selectors import get_contracts_for_user, get_timelogs_for_user
 
 from .mixins import PostRequestMixin, ReadWriteSerializerMixin
 from .permissions import IsAdminOrOwner
@@ -209,18 +207,3 @@ class TimelogRetrieveUpdateDestroyAPIView(
         if self.request.user.is_staff:
             return Timelog.objects.all()
         return get_timelogs_for_user(self.request.user.id)
-
-
-class ContractTimelogListAPIView(ListAPIView):
-    """
-    APIView to provide all the timelogs for a contract
-    """
-
-    permission_classes = (IsAdminOrOwner,)
-    serializer_class = TimelogReadSerializer
-
-    def get_queryset(self):
-        """
-        Get all the logs for the given project id
-        """
-        return get_timelogs_for_contract(self.kwargs['contract_id'])

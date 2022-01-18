@@ -15,16 +15,25 @@ from users.tests.factories import UserFactory
 
 @pytest.fixture(name='project')
 def project_instance():
+    """
+    Fixture to get a project instance
+    """
     return ProjectFactory()
 
 
 @pytest.fixture(name='contract')
 def contract_instance():
+    """
+    Fixture to get a contract instance
+    """
     return ContractFactory()
 
 
 @pytest.fixture(name='timelog')
 def timelog_instance():
+    """
+    Fixture to get a timelog instance
+    """
     return TimelogFactory()
 
 
@@ -492,21 +501,3 @@ class TestUserTimelogListAPIView:
         response = client.get(url)
         assert response.status_code == status.HTTP_200_OK
         assert response.data['count'] == total_owned_contracts
-
-
-class TestContractTimelogsAPIView:
-    """
-    Test that the timelogs for a contract are given correctly
-    """
-
-    @pytest.mark.django_db
-    def test_user_timelog_list_not_accessible_for_unauthenticated_users(
-            self, client, contract
-    ):
-        """
-        Test that the timelog list for user will not be
-        accessible for anonymous user
-        """
-        url = reverse('timelog_list_for_contract', kwargs={'contract_id': contract.id})
-        response = client.get(url)
-        assert response.status_code == status.HTTP_403_FORBIDDEN
